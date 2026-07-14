@@ -27,9 +27,14 @@ The repo is still under construction, thanks for your patience.
 ## 📜 Citation
 
 ```
-@Article{mures2026representing,
+@Article{mures2026nevf,
   author = {Mures, Omar A. and Cid Montoya, Miguel},
-  title = {Representing CFD simulations as Neural Flow Volume Fields for efficient compression, prediction, and analysis},
-  year = {2026}
+  title = {{NeVF: Representing} CFD simulations as neural flow volume fields for efficient compression, reconstruction, and analysis},
+  journal = {Computer-Aided Civil and Infrastructure Engineering},
+  volume = {49},
+  pages = {100125},
+  year = {2026},
+  doi = {10.1016/j.cacaie.2026.100125},
+  url = {https://doi.org/10.1016/j.cacaie.2026.100125},
 }
 ```
