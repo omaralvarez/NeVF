@@ -35,7 +35,7 @@ The repo is still under construction, thanks for your patience.
 ```
 @Article{mures2026nevf,
   author = {Mures, Omar A. and Cid Montoya, Miguel},
-  title = {{NeVF: Representing} CFD simulations as neural flow volume fields for efficient compression, reconstruction, and analysis},
+  title = {{NeVF: Representing CFD} simulations as neural flow volume fields for efficient compression, reconstruction, and analysis},
   journal = {Computer-Aided Civil and Infrastructure Engineering},
   volume = {49},
   pages = {100125},
