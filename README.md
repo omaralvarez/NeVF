@@ -9,7 +9,7 @@
 
 # 🧊 NeVF
 
-[**Representing CFD simulations as Neural Flow Volume Fields for efficient compression, prediction, and analysis**]()<br/>
+[**NeVF: Representing CFD simulations as neural flow volume fields for efficient compression, reconstruction, and analysis**](https://doi.org/10.1016/j.cacaie.2026.100125)<br/>
 [Omar A. Mures](https://omaralv.com/), [Miguel Cid Montoya](https://mcidmontoya.com/)
 
 ## 📢 News
