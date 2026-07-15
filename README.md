@@ -1,8 +1,10 @@
 <p align="center">
+	<a href='https://www.sciencedirect.com/science/article/pii/S1093968726031117/pdfft?md5=e938bb1a4863999573698c8be612eb7a&pid=1-s2.0-S1093968726031117-main.pdf'><img src='https://img.shields.io/badge/Paper-Elsevier-FF551D?logo=elsevier' alt='Paper' /></a>
+	<a href='https://nevf-cfd.github.io/'><img src='https://img.shields.io/badge/Project-Page-green?logo=safari&logoColor=fff' alt='Project Page' /></a>
+	<a href=""><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 	<a><img src='https://img.shields.io/badge/python-3.10%2B-blueviolet' alt='Python' /></a>
 	<a><img src='https://img.shields.io/badge/code%20style-black-black' /></a>
 	<a href='https://opensource.org/license/lgpl-2-1'><img src='https://img.shields.io/badge/license-LGPLv2+-blue' /></a>
-	<a href=""><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 </p>
 
 # 🧊 NeVF
