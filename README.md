@@ -14,6 +14,10 @@
 
 ## 📢 News
 
+### July 2026
+
+- Code release.
+
 ### February 2026
 
 - Code coming soon.
@@ -24,7 +28,7 @@ The repo is still under construction, thanks for your patience.
 
 - [ ] Release Colab example.
 - [ ] Release pip package.
-- [ ] Release of the neural compression code.
+- [x] Release of the neural compression code.
 
 ## 📜 Citation
 
