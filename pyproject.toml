@@ -39,6 +39,9 @@ dependencies = [
     "humanize"
 ]
 
+[tool.hatch.build]
+exclude = ["/datasets"]
+
 [project.optional-dependencies]
 dev = ["black"]
 

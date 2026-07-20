@@ -1,7 +1,9 @@
+# 🐍 Python
 from time import perf_counter
 import json
 import datetime as dt
 
+# 💎 Rich
 from rich.console import Console
 from rich.progress import (
     BarColumn,
@@ -12,6 +14,8 @@ from rich.progress import (
     TimeRemainingColumn,
 )
 import humanize
+
+# 📊 Data
 import numpy as np
 
 

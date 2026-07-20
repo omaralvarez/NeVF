@@ -175,10 +175,10 @@ class BaseModel(pl.LightningModule):
             wandb.log_artifact(artifact)
 
     def predict_step(self, batch, batch_idx):
-        if len(batch) == 3:
-            ts, _, _ = batch
+        if len(batch) == 2:
+            ts, _ = batch
         else:
-            _, ts, _, _ = batch
+            _, ts, _ = batch
 
         pred = self.forward(self.xyz_grid, ts).contiguous()
 

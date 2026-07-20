@@ -1,5 +1,5 @@
 {
-    "project": "comp-wind-les",
+    "project": "nevf-les",
     "model": "NeVFModel",
     "num_nodes": 1,
     "accelerator": "gpu",

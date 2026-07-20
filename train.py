@@ -1,3 +1,4 @@
+# 🧊 NeVF
 from nevf.utils import console, Config
 from nevf.model.datamodule import NeVFDataModule
 from nevf.model.loggers import PredictionLogger
@@ -7,7 +8,6 @@ import nevf.model as model
 import argparse
 import datetime
 import os
-import warnings
 
 # 🍦 Vanilla PyTorch
 import torch
@@ -142,6 +142,8 @@ def main(args):
     mdl = getattr(model, config["model"])()
     mdl.load_state_dict(clean_state_dict)
     mdl.eval()
+
+    preds = trainer.predict(mdl, cwdm)
 
     # Save final model
     torch.save(mdl.state_dict(), "model.pth")
