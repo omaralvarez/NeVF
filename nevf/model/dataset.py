@@ -11,66 +11,47 @@ from torch.utils.data import Dataset
 import numpy as np
 
 
-class NeVFDatasetLES(Dataset):
-    def __init__(self, config, sim_config, data, transform, length):
+class Dataset(Dataset):
+    def __init__(self, config, path, data, transform, length):
         self.config = config
-        self.sim_config = config
+        self.path = path
         self.data = data
         self.transform = transform
         self.length = length
         self.multiplier = config["dataset_multiplier"]
-
+        self.features_out = config["features_out"]
         self.depth = config["depth"]
         self.width = config["width"]
         self.height = config["height"]
-        self.path = sim_config["path"]
-        self.start = sim_config["start_time"]
-        self.end = sim_config["end_time"]
 
         console.print("📟 Loading dataset into RAM...")
-        self.puvw_cache = []
-        self.sf_cache = []
+        self.fields_tensor_cache = []
         self.ts_cache = []
 
         with ProgressBar(transient=False).progress as p:
             for idx in p.track(range(self.length)):
                 npz_path = os.path.join(self.path, self.data.loc[idx, "npz"])
                 with np.load(npz_path) as npz:
-                    p, u, v, w = npz["p"], npz["u"], npz["v"], npz["w"]
-                    sfx, sfy, sfz = npz["sfx"], npz["sfy"], npz["sfz"]
+                    keys = npz.files[-self.features_out :]
+                    fields = [self.transform(npz[key]) for key in keys]
 
-                puvw = torch.stack(
-                    (
-                        self.transform(p),
-                        self.transform(u),
-                        self.transform(v),
-                        self.transform(w),
-                    ),
-                    0,
-                )
+                fields_tensor = torch.stack(fields, 0)
 
-                sf = torch.stack(
-                    (
-                        self.transform(sfx),
-                        self.transform(sfy),
-                        self.transform(sfz),
-                    ),
-                    0,
-                )
-
-                self.puvw_cache.append(puvw)
-                self.sf_cache.append(sf)
+                self.fields_tensor_cache.append(fields_tensor)
                 self.ts_cache.append(
                     torch.tensor([self.__getinfo__(idx)], dtype=torch.float32)
                 )
 
         console.print("📦 Stacking cache into contiguous tensors...")
-        self.puvw_cache = torch.stack(self.puvw_cache)
-        self.sf_cache = torch.stack(self.sf_cache)
+        self.fields_tensor_cache = torch.stack(self.fields_tensor_cache)
         self.ts_cache = torch.stack(self.ts_cache)
 
+        ts_min = self.ts_cache.min()
+        ts_max = self.ts_cache.max()
+        self.ts_cache = (self.ts_cache - ts_min) / (ts_max - ts_min)
+
     def __getinfo__(self, idx):
-        return (float(self.data.loc[idx, "ts"]) - self.start) / (self.end - self.start)
+        return self.data.loc[idx, "ts"]
 
     def __len__(self):
         return self.length * self.multiplier
@@ -81,14 +62,12 @@ class NeVFDatasetLES(Dataset):
             indices = torch.tensor(idx) % self.length
             return (
                 self.ts_cache[indices],
-                self.puvw_cache[indices],
-                self.sf_cache[indices],
+                self.fields_tensor_cache[indices],
             )
 
         # Fallback for single-integer lookups (standard lightning sanity checks)
         real_idx = idx % self.length
         return (
             self.ts_cache[real_idx],
-            self.puvw_cache[real_idx],
-            self.sf_cache[real_idx],
+            self.fields_tensor_cache[real_idx],
         )

@@ -44,7 +44,7 @@
     "additional_loss_weight": 100.0,
     "features_in": 3,
     "features_out": 4,
-    "batch_size": 256,
+    "batch_size": 10,
     "log_every_n_steps": 10,
     "check_val_every_n_epoch": 5,
     "lr": 0.0003,
@@ -57,13 +57,5 @@
     "prefetch_factor": null,
     "persistent": false,
     "pin_memory": true,
-    "p_bounds": [
-        -477.5841755,
-        228.2021566
-    ],
-    "U_bounds": [
-        -20.78070425,
-        31.89518981
-    ],
-    "simulation": "configs/LES_Static.json"
+    "simulation": "datasets/les_bifis_sample"
 }

@@ -1,5 +1,5 @@
 from ..utils import console
-from .dataset_nevf_LES import NeVFDatasetLES
+from .dataset import Dataset
 
 # 🐍 Python
 import os
@@ -55,7 +55,7 @@ class NeVFDataModule(pl.LightningDataModule):
     def __init__(
         self,
         config,
-        sim_config,
+        path,
         batch_size=128,
         num_workers=0,
         persistent=False,
@@ -65,7 +65,7 @@ class NeVFDataModule(pl.LightningDataModule):
     ):
         super().__init__()
         self.config = config
-        self.sim_config = sim_config
+        self.path = path
         self.batch_size = batch_size
         self.num_workers = num_workers
         self.persistent = persistent
@@ -84,12 +84,12 @@ class NeVFDataModule(pl.LightningDataModule):
             self.transform = transforms.Compose([torch.from_numpy])
 
         if wandb.config["model"] == "NeVFModel":
-            self.dataset = NeVFDatasetLES
+            self.dataset = Dataset
         else:
             raise NotImplementedError
 
     def prepare_data(self):
-        self.data = pd.read_csv(os.path.join(self.sim_config["path"], "data.csv"))
+        self.data = pd.read_csv(os.path.join(self.path, "data.csv"))
 
     def setup(self, stage=None):
         self.length = len(self.data)
@@ -97,9 +97,9 @@ class NeVFDataModule(pl.LightningDataModule):
 
         if stage == "fit" or stage is None:
             if not hasattr(self, "train") or self.train is None:
-                console.print("📚 Training: {}".format(self.sim_config["path"]))
+                console.print("📚 Training: {}".format(self.path))
                 self.train = self.dataset(
-                    self.config, self.sim_config, inputs, self.transform, self.length
+                    self.config, self.path, inputs, self.transform, self.length
                 )
 
             self.val = self.train
@@ -111,7 +111,7 @@ class NeVFDataModule(pl.LightningDataModule):
                     and self.train
                     or self.dataset(
                         self.config,
-                        self.sim_config,
+                        self.path,
                         inputs,
                         self.transform,
                         self.length,
@@ -125,7 +125,7 @@ class NeVFDataModule(pl.LightningDataModule):
                     and self.train
                     or self.dataset(
                         self.config,
-                        self.sim_config,
+                        self.path,
                         inputs,
                         self.transform,
                         self.length,

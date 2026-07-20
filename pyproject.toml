@@ -27,14 +27,20 @@ keywords = [
 ]
 dependencies = [
     "numpy>=2.0.0",
-    "scipy",
+    "torch",
+    "torchvision",
+    "lightning",
+    "einops",
+    "wandb[media]",
     "matplotlib",
-    "rich"
+    "pandas",
+    "rich",
+    "humanize"
 ]
 
 [project.optional-dependencies]
 dev = ["black"]
 
 [project.urls]
-Homepage = "https://github.com/omaralvarez/gentab"
-Issues = "https://github.com/omaralvarez/gentab/issues"
+Homepage = "https://github.com/omaralvarez/NeVF"
+Issues = "https://github.com/omaralvarez/NeVF/issues"

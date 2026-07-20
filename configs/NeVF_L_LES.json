@@ -44,26 +44,18 @@
     "additional_loss_weight": 100.0,
     "features_in": 3,
     "features_out": 4,
-    "sqr_root": false,
-    "log_every_n_steps": 8,
-    "batch_size": 128,
+    "batch_size": 10,
+    "log_every_n_steps": 4,
+    "check_val_every_n_epoch": 5,
     "lr": 0.0003,
-    "dataset_multiplier": 1,
-    "epochs": 80000,
-    "patience": 10000,
+    "dataset_multiplier": 4,
+    "epochs": 20000,
+    "patience": 2500,
     "monitor": "valid/loss",
     "mode": "min",
-    "num_workers": 2,
-    "prefetch_factor": 1,
-    "persistent": true,
+    "num_workers": 0,
+    "prefetch_factor": null,
+    "persistent": false,
     "pin_memory": true,
-    "p_bounds": [
-        -477.5841755,
-        228.2021566
-    ],
-    "U_bounds": [
-        -20.78070425,
-        31.89518981
-    ],
-    "simulation": "configs/LES_Static.json"
+    "simulation": "datasets/les_bifis_sample"
 }

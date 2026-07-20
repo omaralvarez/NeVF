@@ -15,9 +15,9 @@ import wandb
 class PredictionLogger(pl.Callback):
     def __init__(self, val_samples, num_samples=32):
         super().__init__()
-        self.val_ts, self.val_puvs, _ = val_samples
+        self.val_ts, self.val_fields = val_samples
         self.val_ts = self.val_ts[:num_samples]
-        self.val_puvs = self.val_puvs[:num_samples]
+        self.val_fields = self.val_fields[:num_samples]
 
         self.depth = wandb.config["depth"]
         self.width = wandb.config["width"]
@@ -37,8 +37,8 @@ class PredictionLogger(pl.Callback):
     def on_validation_epoch_end(self, trainer, pl_module):
         val_ts = self.val_ts.to(device=pl_module.device)
 
-        puvs = self.val_puvs.numpy()[:, :, 0, :, :]
-        val_puvs_vid = (puvs * 255.0).astype(np.uint8)[:, 0:3, :, :]
+        fields = self.val_fields.numpy()[:, :, 0, :, :]
+        fields_vid = (fields * 255.0).astype(np.uint8)[:, 0:3, :, :]
 
         # .numpy() doesn't officially support bfloat16, cast to float32 first
         preds = pl_module(None, val_ts).float().cpu().numpy()[:, :, 0, :, :]
@@ -50,10 +50,10 @@ class PredictionLogger(pl.Callback):
                     vid
                     for vid in (
                         wandb.Video(
-                            preds_video, caption="Predicted u,v,p", fps=4, format="gif"
+                            preds_video, caption="Predicted fields", fps=4, format="gif"
                         ),
                         wandb.Video(
-                            val_puvs_vid, caption="Real u,v,p ", fps=4, format="gif"
+                            fields_vid, caption="Real fields", fps=4, format="gif"
                         ),
                     )
                 ],

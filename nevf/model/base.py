@@ -21,9 +21,6 @@ class BaseModel(pl.LightningModule):
         self.single_decoder = wandb.config["single_decoder"]
 
         self.mape = MeanAbsolutePercentageError()
-        self.mape_p = MeanAbsolutePercentageError()
-        self.mape_u = MeanAbsolutePercentageError()
-        self.mape_v = MeanAbsolutePercentageError()
 
         self.psnr = PeakSignalNoiseRatio(data_range=(0.0, 1.0))
 
@@ -42,10 +39,6 @@ class BaseModel(pl.LightningModule):
             self.automatic_optimization = False
 
             self.mse = MeanSquaredError()
-            self.mse_p = MeanSquaredError()
-            self.mse_u = MeanSquaredError()
-            self.mse_v = MeanSquaredError()
-            self.mse_w = MeanSquaredError()
 
     def setup(self, stage=None):
         pass
@@ -73,24 +66,22 @@ class BaseModel(pl.LightningModule):
             )
 
     def shared_step(self, batch, stage):
-        if len(batch) == 3:
-            ts, puv, _ = batch
+        if len(batch) == 2:
+            ts, fields = batch
         else:
-            _, ts, puv, _ = (
-                batch  # Just in case loggers still send coords for some reason
-            )
+            _, ts, fields = batch
 
         if not self.single_decoder:
             p_opt, u_opt, v_opt, w_opt = self.optimizers()
 
         pred = self.forward(self.xyz_grid, ts)
 
-        mse = self.mse(pred, puv)
+        mse = self.mse(pred, fields)
 
         if not self.single_decoder and stage == "train":
             loss_p = self.mse_p(
                 pred[:, 0 : wandb.config["depth"], :, :].contiguous(),
-                puv[:, 0 : wandb.config["depth"], :, :].contiguous(),
+                fields[:, 0 : wandb.config["depth"], :, :].contiguous(),
             )
             p_opt.zero_grad()
             self.manual_backward(loss_p, retain_graph=True)
@@ -100,7 +91,7 @@ class BaseModel(pl.LightningModule):
                 pred[
                     :, wandb.config["depth"] : wandb.config["depth"] * 2, :, :
                 ].contiguous(),
-                puv[
+                fields[
                     :, wandb.config["depth"] : wandb.config["depth"] * 2, :, :
                 ].contiguous(),
             )
@@ -112,7 +103,7 @@ class BaseModel(pl.LightningModule):
                 pred[
                     :, wandb.config["depth"] * 2 : wandb.config["depth"] * 3, :, :
                 ].contiguous(),
-                puv[
+                fields[
                     :, wandb.config["depth"] * 2 : wandb.config["depth"] * 3, :, :
                 ].contiguous(),
             )
@@ -124,7 +115,7 @@ class BaseModel(pl.LightningModule):
                 pred[
                     :, wandb.config["depth"] * 3 : wandb.config["depth"] * 4, :, :
                 ].contiguous(),
-                puv[
+                fields[
                     :, wandb.config["depth"] * 3 : wandb.config["depth"] * 4, :, :
                 ].contiguous(),
             )
@@ -135,29 +126,13 @@ class BaseModel(pl.LightningModule):
         # MAPE
         mape = self.mape(
             pred[:, :, : wandb.config["depth"], :, :],
-            puv[:, :, : wandb.config["depth"], :, :],
-        )
-        mape_p = self.mape_p(
-            pred[:, 0, : wandb.config["depth"], :, :],
-            puv[:, 0, : wandb.config["depth"], :, :],
-        )
-        mape_u = self.mape_u(
-            pred[:, 1, : wandb.config["depth"], :, :],
-            puv[:, 1, : wandb.config["depth"], :, :],
-        )
-        mape_v = self.mape_v(
-            pred[:, 2, : wandb.config["depth"], :, :],
-            puv[:, 2, : wandb.config["depth"], :, :],
-        )
-        mape_w = self.mape_w(
-            pred[:, 3, : wandb.config["depth"], :, :],
-            puv[:, 3, : wandb.config["depth"], :, :],
+            fields[:, :, : wandb.config["depth"], :, :],
         )
 
         # PSNR
         psnr = self.psnr(
             pred[:, :, : wandb.config["depth"], :, :],
-            puv[:, :, : wandb.config["depth"], :, :],
+            fields[:, :, : wandb.config["depth"], :, :],
         )
 
         loss = mse
@@ -166,10 +141,6 @@ class BaseModel(pl.LightningModule):
         self.log(stage + "/MSE", mse, on_step=False, on_epoch=True)
         self.log(stage + "/loss", loss, on_step=False, on_epoch=True, prog_bar=True)
         self.log(stage + "/MAPE", mape, on_step=False, on_epoch=True)
-        self.log(stage + "/MAPEp", mape_p, on_step=False, on_epoch=True)
-        self.log(stage + "/MAPEu", mape_u, on_step=False, on_epoch=True)
-        self.log(stage + "/MAPEv", mape_v, on_step=False, on_epoch=True)
-        self.log(stage + "/MAPEw", mape_w, on_step=False, on_epoch=True)
         self.log(stage + "/PSNR", psnr, on_step=False, on_epoch=True)
 
         return loss
