@@ -8,6 +8,7 @@ comp-wind-les/
 models/
 predictions_*/
 *.csv
+!datasets/les_bifis_sample/data.csv
 *.png
 *.pth
 model_weights.pth
