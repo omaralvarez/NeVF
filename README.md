@@ -14,7 +14,7 @@
 
 ## 📢 Latest News
 
-#### 🔥 **[2026.08]** [Colab](https://colab.research.google.com/drive/17gbHzfWKct0r8XctirKBpJhCVFpNQNHL?usp=sharing) example released! 💡
+#### 🔥 **[2026.08]** [Colab](https://colab.research.google.com/drive/17gbHzfWKct0r8XctirKBpJhCVFpNQNHL?usp=sharing) example released! 🚀
 #### 🔥 **[2026.07]** Pip package released! 📦
 #### 🔥 **[2026.07]** Code Released - Get Started Now! 🚀
 #### 🔥 **[2026.02]** Code Coming Soon! 👀
